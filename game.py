@@ -182,6 +182,8 @@ game_html = """
     const npcImage = new Image();
     const characterCanvas = document.createElement("canvas");
     const characterCtx = characterCanvas.getContext("2d");
+    const spriteFrameCanvas = document.createElement("canvas");
+    const spriteFrameCtx = spriteFrameCanvas.getContext("2d", { willReadFrequently: true });
     const starCanvas = document.createElement("canvas");
     const starCtx = starCanvas.getContext("2d", { willReadFrequently: true });
     const npcCanvas = document.createElement("canvas");
@@ -210,10 +212,6 @@ game_html = """
         characterCtx.clearRect(0, 0, characterCanvas.width, characterCanvas.height);
         characterCtx.drawImage(characterImage, 0, 0);
         hasCharacterSheet = characterImage.naturalWidth >= 1400 && characterImage.naturalHeight >= 1600;
-        if (hasCharacterSheet) {
-          const pixels = characterCtx.getImageData(0, 0, characterCanvas.width, characterCanvas.height);
-          characterCtx.putImageData(makeSpriteSheetBackdropTransparent(pixels), 0, 0);
-        }
         characterSpriteBounds = findOpaqueBounds(
           characterCtx.getImageData(0, 0, characterCanvas.width, characterCanvas.height)
         );
@@ -308,13 +306,12 @@ game_html = """
       const a = data[offset + 3];
       if (a <= 18) return true;
 
-      const veryDark = r <= 8 && g <= 8 && b <= 10;
       const hotMagenta = r >= 120 && g <= 55 && b >= 95;
       const deepPurple = r >= 60 && g <= 35 && b >= 60 && Math.abs(r - b) <= 95;
       const artifactBlue = b >= 150 && r <= 70 && g <= 95;
       const artifactGreen = g >= 85 && r <= 45 && b <= 45;
       const artifactRed = r >= 130 && g <= 35 && b <= 45;
-      return veryDark || hotMagenta || deepPurple || artifactBlue || artifactGreen || artifactRed;
+      return hotMagenta || deepPurple || artifactBlue || artifactGreen || artifactRed;
     }
 
     function makeSpriteSheetBackdropTransparent(imageData) {
@@ -351,6 +348,16 @@ game_html = """
       }
 
       return imageData;
+    }
+
+    function cleanSpriteCell(sprite) {
+      spriteFrameCanvas.width = sprite.sw;
+      spriteFrameCanvas.height = sprite.sh;
+      spriteFrameCtx.clearRect(0, 0, sprite.sw, sprite.sh);
+      spriteFrameCtx.drawImage(characterCanvas, sprite.sx, sprite.sy, sprite.sw, sprite.sh, 0, 0, sprite.sw, sprite.sh);
+      const pixels = spriteFrameCtx.getImageData(0, 0, sprite.sw, sprite.sh);
+      spriteFrameCtx.putImageData(makeSpriteSheetBackdropTransparent(pixels), 0, 0);
+      return findOpaqueBounds(spriteFrameCtx.getImageData(0, 0, sprite.sw, sprite.sh));
     }
 
     function buildStarProjectile() {
@@ -2023,7 +2030,7 @@ game_html = """
 
       let bounds = { x: 0, y: 0, w: sprite.sw, h: sprite.sh };
       if (hasCharacterSheet) {
-        bounds = findOpaqueBounds(characterCtx.getImageData(sprite.sx, sprite.sy, sprite.sw, sprite.sh));
+        bounds = cleanSpriteCell(sprite);
       }
 
       spriteBoundsCache.set(key, bounds);
@@ -2053,6 +2060,13 @@ game_html = """
 
         ctx.save();
         ctx.imageSmoothingEnabled = false;
+        spriteFrameCanvas.width = sprite.sw;
+        spriteFrameCanvas.height = sprite.sh;
+        spriteFrameCtx.clearRect(0, 0, sprite.sw, sprite.sh);
+        spriteFrameCtx.drawImage(characterCanvas, sprite.sx, sprite.sy, sprite.sw, sprite.sh, 0, 0, sprite.sw, sprite.sh);
+        const framePixels = spriteFrameCtx.getImageData(0, 0, sprite.sw, sprite.sh);
+        spriteFrameCtx.putImageData(makeSpriteSheetBackdropTransparent(framePixels), 0, 0);
+
         ctx.fillStyle = "rgba(0,0,0,0.26)";
         ctx.beginPath();
         ctx.ellipse(screenX, screenY + 2, 14, 3.5, 0, 0, Math.PI * 2);
@@ -2062,9 +2076,9 @@ game_html = """
           ctx.translate(drawX + drawW, drawY);
           ctx.scale(-1, 1);
           ctx.drawImage(
-            characterCanvas,
-            sprite.sx + spriteBounds.x,
-            sprite.sy + spriteBounds.y,
+            spriteFrameCanvas,
+            spriteBounds.x,
+            spriteBounds.y,
             spriteBounds.w,
             spriteBounds.h,
             Math.round(spriteBounds.x * scaleX),
@@ -2074,9 +2088,9 @@ game_html = """
           );
         } else {
           ctx.drawImage(
-            characterCanvas,
-            sprite.sx + spriteBounds.x,
-            sprite.sy + spriteBounds.y,
+            spriteFrameCanvas,
+            spriteBounds.x,
+            spriteBounds.y,
             spriteBounds.w,
             spriteBounds.h,
             croppedX,
