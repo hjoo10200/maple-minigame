@@ -766,18 +766,73 @@ game_html = """
       });
     }
 
-    function prepareHazards(stageConfig, stageIndex, stagePlatforms) {
+    function findNearestPlatformIndex(checkpoint, stagePlatforms) {
+      const centerX = checkpoint.x + checkpoint.w / 2;
+      const surfaceHint = checkpoint.y + 1;
+      let bestIndex = 0;
+      let bestScore = Infinity;
+
+      for (let index = 0; index < stagePlatforms.length; index++) {
+        const platform = stagePlatforms[index];
+        const platformCenterX = platform.x + platform.w / 2;
+        const dx = Math.max(0, Math.abs(centerX - platformCenterX) - platform.w / 2);
+        const dy = Math.abs(platformSurfaceY(platform) - surfaceHint);
+        const score = dy * 3 + dx;
+        if (score < bestScore) {
+          bestIndex = index;
+          bestScore = score;
+        }
+      }
+
+      return bestIndex;
+    }
+
+    function prepareCheckpoints(stageConfig, stagePlatforms) {
+      return stageConfig.checkpoints.map((checkpoint) => {
+        const platformIndex = checkpoint.platform ?? findNearestPlatformIndex(checkpoint, stagePlatforms);
+        const platform = stagePlatforms[platformIndex];
+        if (!platform) return { ...checkpoint };
+
+        return {
+          ...checkpoint,
+          platform: platformIndex,
+          x: Math.round(platform.x + platform.w / 2 - checkpoint.w / 2),
+          y: Math.round(platformSurfaceY(platform) - 1),
+        };
+      });
+    }
+
+    function checkpointPlatformSet(checkpointList) {
+      return new Set(checkpointList.map((checkpoint) => checkpoint.platform).filter((platform) => platform !== undefined));
+    }
+
+    function hazardBlocksEarlyCheckpoint(hazard, checkpointList) {
+      return checkpointList.some((checkpoint) => {
+        const checkpointCenterX = checkpoint.x + checkpoint.w / 2;
+        const checkpointSurface = checkpoint.y + 1;
+        const minX = hazard.min ?? hazard.x - (hazard.r || 0);
+        const maxX = hazard.max ?? hazard.x + (hazard.r || 0);
+        const minY = hazard.minY ?? hazard.y - (hazard.r || 0);
+        const maxY = hazard.maxY ?? hazard.y + (hazard.r || 0);
+        const crossesX = checkpointCenterX >= minX - 48 && checkpointCenterX <= maxX + 48;
+        const crossesY = checkpointSurface >= minY - 96 && checkpointSurface <= maxY + 96;
+        return crossesX && crossesY;
+      });
+    }
+
+    function prepareHazards(stageConfig, stageIndex, stagePlatforms, checkpointList) {
       const baseHazards = stageConfig.hazards.map((hazard) => ({ ...hazard }));
       const rule = platformGuardRules[Math.min(stageIndex, platformGuardRules.length - 1)];
       const targetTotal = rule.targetTotal;
       const pinnedHazards = baseHazards.filter((hazard) => hazard.pinned);
-      const roamingHazards = baseHazards.filter((hazard) => !hazard.pinned);
+      const safeCheckpointPlatforms = stageIndex < 2 ? checkpointPlatformSet(checkpointList) : new Set();
+      const roamingHazards = baseHazards.filter((hazard) => !hazard.pinned && (stageIndex >= 2 || !hazardBlocksEarlyCheckpoint(hazard, checkpointList)));
       const baseCount = Math.max(0, Math.min(roamingHazards.length, targetTotal - rule.max - pinnedHazards.length));
       const keptBaseHazards = [...roamingHazards.slice(0, baseCount), ...pinnedHazards];
       const guardCount = Math.max(0, Math.min(rule.max, targetTotal - keptBaseHazards.length));
       const guardPlatforms = stagePlatforms
         .map((platform, index) => ({ platform, index }))
-        .filter(({ index }) => index > 0 && index < stagePlatforms.length - 1 && index % rule.step === 0)
+        .filter(({ index }) => index > 0 && index < stagePlatforms.length - 1 && index % rule.step === 0 && !safeCheckpointPlatforms.has(index))
         .slice(0, guardCount);
 
       const guardHazards = guardPlatforms.map(({ platform, index }, guardIndex) => {
@@ -802,8 +857,9 @@ game_html = """
       return [...keptBaseHazards, ...guardHazards];
     }
 
-    function prepareSpikes(stageConfig, stagePlatforms) {
-      return (stageConfig.spikes || []).map((spike) => {
+    function prepareSpikes(stageConfig, stageIndex, stagePlatforms, checkpointList) {
+      const safeCheckpointPlatforms = stageIndex < 4 ? checkpointPlatformSet(checkpointList) : new Set();
+      return (stageConfig.spikes || []).filter((spike) => !safeCheckpointPlatforms.has(spike.platform)).map((spike) => {
         if (spike.platform === undefined) return { ...spike };
 
         const platform = stagePlatforms[spike.platform];
@@ -829,10 +885,10 @@ game_html = """
     let currentStage = 0;
     let stage = stages[currentStage];
     let platforms = preparePlatforms(stage, currentStage);
-    let checkpoints = stage.checkpoints;
-    let hazards = prepareHazards(stage, currentStage, platforms);
+    let checkpoints = prepareCheckpoints(stage, platforms);
+    let hazards = prepareHazards(stage, currentStage, platforms, checkpoints);
     let ropes = stage.ropes || [];
-    let spikes = prepareSpikes(stage, platforms);
+    let spikes = prepareSpikes(stage, currentStage, platforms, checkpoints);
     let clearTimer = 0;
     let frame = 0;
     let demoMode = false;
@@ -879,10 +935,10 @@ game_html = """
       stage = stages[currentStage];
       world.height = stage.height;
       platforms = preparePlatforms(stage, currentStage);
-      checkpoints = stage.checkpoints;
-      hazards = prepareHazards(stage, currentStage, platforms);
+      checkpoints = prepareCheckpoints(stage, platforms);
+      hazards = prepareHazards(stage, currentStage, platforms, checkpoints);
       ropes = stage.ropes || [];
-      spikes = prepareSpikes(stage, platforms);
+      spikes = prepareSpikes(stage, currentStage, platforms, checkpoints);
       clearTimer = 0;
       stageStartedAt = performance.now();
       stageFinishElapsedMs = null;
