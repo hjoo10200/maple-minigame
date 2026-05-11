@@ -65,11 +65,13 @@ default_exit_portal = Path(__file__).resolve().parent / "exit_portal.png"
 default_background = Path(__file__).resolve().parent / "elinia.png"
 default_star_projectile = Path(__file__).resolve().parent / "표창.png"
 default_npc = Path(__file__).resolve().parent / "npc.png"
+default_ellinia_emblem = Path(__file__).resolve().parent / "엘리니아엠블렘.png"
 background_data_url = ""
 character_data_url = ""
 portal_data_url = ""
 star_data_url = ""
 npc_data_url = ""
+ellinia_emblem_data_url = ""
 
 if default_background.exists():
     background_data_url = image_to_data_url(default_background)
@@ -82,6 +84,9 @@ if default_star_projectile.exists():
 
 if default_npc.exists():
     npc_data_url = image_to_data_url(default_npc)
+
+if default_ellinia_emblem.exists():
+    ellinia_emblem_data_url = image_to_data_url(default_ellinia_emblem)
 
 if default_spritesheet.exists():
     character_data_url = image_to_data_url(default_spritesheet)
@@ -110,7 +115,6 @@ game_html = """
         <button id="restart">처음부터</button>
         <button id="prev-stage">이전</button>
         <button id="next-stage">다음</button>
-        <button id="demo-run">자동플레이</button>
         <span id="status">대충 시작!</span>
       </div>
     </div>
@@ -169,17 +173,18 @@ game_html = """
     const restartButton = document.getElementById("restart");
     const prevStageButton = document.getElementById("prev-stage");
     const nextStageButton = document.getElementById("next-stage");
-    const demoRunButton = document.getElementById("demo-run");
     const suppliedBackground = "__BACKGROUND_DATA_URL__";
     const suppliedCharacter = "__CHARACTER_DATA_URL__";
     const suppliedPortal = "__PORTAL_DATA_URL__";
     const suppliedStar = "__STAR_DATA_URL__";
     const suppliedNpc = "__NPC_DATA_URL__";
+    const suppliedElliniaEmblem = "__ELLINIA_EMBLEM_DATA_URL__";
     const backgroundImage = new Image();
     const characterImage = new Image();
     const portalImage = new Image();
     const starImage = new Image();
     const npcImage = new Image();
+    const elliniaEmblemImage = new Image();
     const characterCanvas = document.createElement("canvas");
     const characterCtx = characterCanvas.getContext("2d");
     const spriteFrameCanvas = document.createElement("canvas");
@@ -193,6 +198,7 @@ game_html = """
     let hasPortalImage = false;
     let hasStarImage = false;
     let hasNpcImage = false;
+    let hasElliniaEmblem = false;
     let hasCharacterSheet = false;
     let characterSpriteBounds = { x: 0, y: 0, w: 1, h: 1 };
     let npcSpriteBounds = { x: 0, y: 0, w: 52, h: 70 };
@@ -390,6 +396,13 @@ game_html = """
       };
     }
 
+    if (suppliedElliniaEmblem) {
+      elliniaEmblemImage.src = suppliedElliniaEmblem;
+      elliniaEmblemImage.onload = () => {
+        hasElliniaEmblem = true;
+      };
+    }
+
     ctx.imageSmoothingEnabled = false;
 
     const keys = new Set();
@@ -453,6 +466,11 @@ game_html = """
       ],
       fall: [
         spriteCell(5, 6),
+      ],
+      crouch: [
+        spriteCell(5, 0),
+        spriteCell(5, 1),
+        spriteCell(5, 7),
       ],
     };
 
@@ -727,6 +745,71 @@ game_html = """
           { x: 508, y: 238, r: 9, dy: -1.55, minY: 156, maxY: 360, type: "star" },
         ],
       },
+      {
+        name: "히든 <6단계>: 극한의 도전",
+        height: 2220,
+        tint: "#f3d1ff",
+        ascentShrink: true,
+        looseCheckpoints: true,
+        hidden: true,
+        start: { x: 70, y: 2118 },
+        goal: { x: 704, y: 54, w: 166, h: 96 },
+        checkpoints: [
+          { x: 294, y: 1606, w: 22, h: 45 },
+          { x: 662, y: 956, w: 22, h: 45 },
+          { x: 254, y: 356, w: 22, h: 45 },
+        ],
+        ropes: [],
+        spikes: [
+          { platform: 2, align: 0.5, span: 34, length: 48, phase: 0, period: 104 },
+          { platform: 4, align: 0.48, span: 32, length: 52, phase: 36, period: 102 },
+          { platform: 6, align: 0.52, span: 32, length: 52, phase: 68, period: 100 },
+          { platform: 8, align: 0.5, span: 30, length: 54, phase: 92, period: 98 },
+          { platform: 10, align: 0.48, span: 30, length: 54, phase: 18, period: 96 },
+          { platform: 12, align: 0.52, span: 28, length: 52, phase: 52, period: 94 },
+          { platform: 14, align: 0.5, span: 28, length: 50, phase: 80, period: 92 },
+          { platform: 17, align: 0.5, span: 26, length: 50, phase: 32, period: 90 },
+          { platform: 20, align: 0.5, span: 26, length: 48, phase: 72, period: 88 },
+        ],
+        platforms: [
+          { x: 42, y: 2168, w: 178, h: 15 },
+          { x: 292, y: 2078, w: 58, h: 14 },
+          { x: 524, y: 1988, w: 54, h: 14 },
+          { x: 760, y: 1892, w: 52, h: 14 },
+          { x: 610, y: 1796, w: 50, h: 14 },
+          { x: 360, y: 1704, w: 48, h: 14 },
+          { x: 128, y: 1608, w: 48, h: 14 },
+          { x: 342, y: 1514, w: 46, h: 14 },
+          { x: 590, y: 1424, w: 46, h: 14 },
+          { x: 790, y: 1328, w: 44, h: 14 },
+          { x: 548, y: 1238, w: 44, h: 14 },
+          { x: 312, y: 1148, w: 42, h: 14 },
+          { x: 88, y: 1058, w: 42, h: 14 },
+          { x: 318, y: 968, w: 40, h: 14 },
+          { x: 568, y: 878, w: 40, h: 14 },
+          { x: 784, y: 788, w: 40, h: 14 },
+          { x: 540, y: 698, w: 38, h: 14 },
+          { x: 306, y: 608, w: 38, h: 14 },
+          { x: 112, y: 518, w: 38, h: 14 },
+          { x: 340, y: 432, w: 36, h: 14 },
+          { x: 584, y: 342, w: 36, h: 14 },
+          { x: 732, y: 252, w: 36, h: 14 },
+          { x: 704, y: 150, w: 150, h: 14 },
+        ],
+        hazards: [
+          { x: 610, y: 2038, r: 10, dx: -2.45, min: 286, max: 842, type: "star" },
+          { x: 168, y: 1852, r: 10, dx: 2.35, min: 58, max: 546, type: "star" },
+          { x: 792, y: 1662, r: 10, dx: -2.4, min: 404, max: 890, type: "star" },
+          { x: 274, y: 1468, r: 10, dx: 2.28, min: 66, max: 650, type: "star" },
+          { x: 660, y: 1284, r: 10, dx: -2.3, min: 320, max: 884, type: "star" },
+          { x: 210, y: 1014, r: 9, dx: 2.18, min: 54, max: 628, type: "star" },
+          { x: 624, y: 744, r: 9, dx: -2.05, min: 298, max: 874, type: "star" },
+          { x: 410, y: 392, r: 9, dx: 2.0, min: 76, max: 770, type: "star" },
+          { x: 454, y: 1840, r: 9, dy: 1.85, minY: 1668, maxY: 2040, type: "star" },
+          { x: 718, y: 1120, r: 9, dy: -1.9, minY: 858, maxY: 1328, type: "star" },
+          { x: 206, y: 620, r: 9, dy: 1.82, minY: 426, maxY: 888, type: "star" },
+        ],
+      },
     ];
 
     const platformWidthRules = [
@@ -735,6 +818,7 @@ game_html = """
       { scale: 0.76, min: 78, max: 126 },
       { scale: 0.63, min: 58, max: 108 },
       { scale: 0.72, min: 38, max: 118 },
+      { scale: 0.92, min: 30, max: 52 },
     ];
 
     const platformGuardRules = [
@@ -743,7 +827,12 @@ game_html = """
       { step: 4, max: 1, targetTotal: 6, r: 10, speed: 1.45, range: 94, yOffset: 56 },
       { step: 3, max: 2, targetTotal: 9, r: 11, speed: 1.62, range: 108, yOffset: 55 },
       { step: 3, max: 2, targetTotal: 11, r: 10, speed: 1.82, range: 118, yOffset: 54 },
+      { step: 2, max: 4, targetTotal: 15, r: 9, speed: 2.0, range: 132, yOffset: 52 },
     ];
+
+    const visibleStageCount = 5;
+    const hiddenStageIndex = 5;
+    const hiddenClearLimitMs = 180000;
 
     const platformGrassBottomOffset = -3;
 
@@ -792,6 +881,15 @@ game_html = """
         const platformIndex = checkpoint.platform ?? findNearestPlatformIndex(checkpoint, stagePlatforms);
         const platform = stagePlatforms[platformIndex];
         if (!platform) return { ...checkpoint };
+
+        if (stageConfig.looseCheckpoints) {
+          return {
+            ...checkpoint,
+            platform: platformIndex,
+            x: Math.round(Math.max(platform.x - 12, Math.min(platform.x + platform.w - checkpoint.w + 12, checkpoint.x))),
+            y: Math.round(platformSurfaceY(platform) - 1),
+          };
+        }
 
         return {
           ...checkpoint,
@@ -891,12 +989,12 @@ game_html = """
     let spikes = prepareSpikes(stage, currentStage, platforms, checkpoints);
     let clearTimer = 0;
     let frame = 0;
-    let demoMode = false;
-    let demoIndex = 0;
-    let demoRoute = [];
     let cameraY = 0;
     let stageStartedAt = performance.now();
     let stageFinishElapsedMs = null;
+    let stageResults = Array(stages.length).fill(null);
+    let hiddenUnlocked = false;
+    let resultButtonRect = null;
     let npcBubbleText = "";
     let npcBubbleMessageIndex = -1;
     let npcBubbleStartFrame = -9999;
@@ -915,6 +1013,7 @@ game_html = """
       checkpoint: { ...stage.start },
       deaths: 0,
       onRope: false,
+      crouching: false,
       facing: 1,
       coyote: 0,
       jumpBuffer: 0,
@@ -924,14 +1023,28 @@ game_html = """
 
     function getStageStartSpot() {
       const startPlatform = platforms[0];
+      if (currentStage === hiddenStageIndex && startPlatform) {
+        const npcCenterX = getStartNpcCenterX(Math.round(npcSpriteBounds.w * 1.08));
+        return {
+          x: Math.round(npcCenterX - player.w / 2),
+          y: Math.round(platformSurfaceY(startPlatform) - player.h),
+        };
+      }
+
       return {
         x: stage.start.x,
         y: startPlatform ? Math.round(platformSurfaceY(startPlatform) - player.h) : stage.start.y,
       };
     }
 
-    function loadStage(index) {
-      currentStage = (index + stages.length) % stages.length;
+    function loadStage(index, forceHidden = false) {
+      if (index === hiddenStageIndex && !forceHidden && !hiddenUnlocked) {
+        statusText.textContent = "히든 스테이지는 조건 달성 시에만 입장 가능";
+        return;
+      }
+
+      const selectableCount = forceHidden ? stages.length : visibleStageCount;
+      currentStage = (index + selectableCount) % selectableCount;
       stage = stages[currentStage];
       world.height = stage.height;
       platforms = preparePlatforms(stage, currentStage);
@@ -942,9 +1055,7 @@ game_html = """
       clearTimer = 0;
       stageStartedAt = performance.now();
       stageFinishElapsedMs = null;
-      demoMode = false;
-      demoIndex = 0;
-      demoRoute = [];
+      resultButtonRect = null;
       npcBubbleText = "";
       npcBubbleMessageIndex = -1;
       npcBubbleStartFrame = -9999;
@@ -957,6 +1068,10 @@ game_html = """
       statusText.textContent = `${stage.name} 시작`;
     }
 
+    function loadVisibleStage(index) {
+      loadStage((index + visibleStageCount) % visibleStageCount);
+    }
+
     function reset(toCheckpoint = true) {
       const spot = toCheckpoint ? player.checkpoint : getStageStartSpot();
       player.x = spot.x;
@@ -964,28 +1079,12 @@ game_html = """
       player.vx = 0;
       player.vy = 0;
       player.onRope = false;
+      player.crouching = false;
       player.facing = 1;
       player.coyote = 0;
       player.jumpBuffer = 0;
       player.lastJump = false;
       player.won = false;
-    }
-
-    function makeDemoRoute() {
-      const route = platforms
-        .map((p) => ({
-          x: Math.round(p.x + p.w / 2 - player.w / 2),
-          y: Math.round(platformSurfaceY(p) - player.h),
-        }))
-        .sort((a, b) => b.y - a.y);
-
-      route.unshift(getStageStartSpot());
-      route.push({
-        x: Math.round(stage.goal.x + stage.goal.w / 2 - player.w / 2),
-        y: Math.round(stage.goal.y + stage.goal.h - player.h),
-      });
-
-      return route;
     }
 
     function getHumanControls() {
@@ -996,61 +1095,6 @@ game_html = """
         down: keys.has("ArrowDown") || keys.has("s"),
         jump: keys.has(" "),
       };
-    }
-
-    function getBotControls() {
-      if (!demoMode || demoRoute.length === 0) return getHumanControls();
-
-      let target = demoRoute[Math.min(demoIndex, demoRoute.length - 1)];
-      const centerX = player.x + player.w / 2;
-      const targetX = target.x + player.w / 2;
-      const dx = targetX - centerX;
-      const dy = target.y - player.y;
-
-      if (Math.abs(dx) < 22 && Math.abs(dy) < 34) {
-        demoIndex += 1;
-        target = demoRoute[Math.min(demoIndex, demoRoute.length - 1)];
-      }
-
-      if (demoIndex >= demoRoute.length) {
-        demoMode = false;
-        return { left: false, right: false, up: false, down: false, jump: false };
-      }
-
-      const nextDx = target.x + player.w / 2 - centerX;
-      const nextDy = target.y - player.y;
-      const usefulRope = ropes.find((rope) => {
-        const horizontallyNear = Math.abs(rope.x - centerX) < 70;
-        const verticalSpan = player.y > rope.y - 45 && target.y < player.y;
-        return horizontallyNear && verticalSpan;
-      });
-
-      const controls = {
-        left: nextDx < -16,
-        right: nextDx > 16,
-        up: false,
-        down: false,
-        jump: false,
-      };
-
-      if (usefulRope) {
-        controls.left = centerX > usefulRope.x + 8;
-        controls.right = centerX < usefulRope.x - 8;
-        controls.up = Math.abs(centerX - usefulRope.x) < 22;
-        controls.jump = controls.up && player.y < target.y + 35;
-        return controls;
-      }
-
-      if (player.grounded && nextDy < -12) {
-        controls.jump = true;
-      }
-
-      if (!player.grounded && player.vy < 0 && Math.abs(nextDx) < 28) {
-        controls.left = false;
-        controls.right = false;
-      }
-
-      return controls;
     }
 
     function rectsOverlap(a, b) {
@@ -1110,16 +1154,13 @@ game_html = """
       updateNpcBubble();
 
       if (player.won) {
-        clearTimer += 1;
-        if (clearTimer > 85) {
-          loadStage(currentStage + 1);
-        }
         return;
       }
 
-      const controls = demoMode ? getBotControls() : getHumanControls();
+      const controls = getHumanControls();
       const { left, right, up, down, jump } = controls;
       const jumpPressed = jump && !player.lastJump;
+      player.crouching = down && player.grounded && !player.onRope && Math.abs(player.vx) < 1.2;
       player.lastJump = jump;
       if (jumpPressed || (up && !player.onRope)) {
         player.jumpBuffer = 8;
@@ -1213,9 +1254,10 @@ game_html = """
         h.y += h.dy || 0;
         if (h.min !== undefined && h.max !== undefined && (h.x < h.min || h.x > h.max)) h.dx *= -1;
         if (h.minY !== undefined && h.maxY !== undefined && (h.y < h.minY || h.y > h.maxY)) h.dy *= -1;
+        const hitRadius = h.type === "star" ? h.r * 1.38 + 4 : h.r;
         const badBox = h.type === "necki"
           ? { x: h.x - h.w / 2, y: h.y - h.h / 2, w: h.w, h: h.h }
-          : { x: h.x - h.r, y: h.y - h.r, w: h.r * 2, h: h.r * 2 };
+          : { x: h.x - hitRadius, y: h.y - hitRadius, w: hitRadius * 2, h: hitRadius * 2 };
         if (rectsOverlap(player, badBox)) splatDeath();
       }
 
@@ -1241,6 +1283,14 @@ game_html = """
         player.won = true;
         clearTimer = 0;
         stageFinishElapsedMs = performance.now() - stageStartedAt;
+        if (currentStage === visibleStageCount - 1 && stageFinishElapsedMs <= hiddenClearLimitMs) {
+          hiddenUnlocked = true;
+        }
+        stageResults[currentStage] = {
+          name: stage.name,
+          deaths: player.deaths,
+          elapsedMs: stageFinishElapsedMs,
+        };
         statusText.textContent = `${stage.name} 성공. 사망 ${player.deaths}번.`;
       }
     }
@@ -1955,14 +2005,8 @@ game_html = """
       ctx.restore();
     }
 
-    function drawStartNpc(cameraY) {
-      if (!hasNpcImage) return;
-
+    function getStartNpcCenterX(drawW) {
       const startPlatform = platforms[0];
-      const npcScale = 1.08;
-      const drawW = Math.round(npcSpriteBounds.w * npcScale);
-      const drawH = Math.round(npcSpriteBounds.h * npcScale);
-      const baseY = startPlatform ? platformSurfaceY(startPlatform) : stage.start.y + player.h;
       const startCenterX = stage.start.x + player.w / 2;
       const preferRight = stage.start.x < world.width / 2;
       let centerX = startCenterX + (preferRight ? 62 : -54);
@@ -1975,7 +2019,18 @@ game_html = """
           : startPlatform.x + startPlatform.w / 2;
       }
 
-      centerX = Math.max(drawW / 2 + 8, Math.min(world.width - drawW / 2 - 8, centerX));
+      return Math.max(drawW / 2 + 8, Math.min(world.width - drawW / 2 - 8, centerX));
+    }
+
+    function drawStartNpc(cameraY) {
+      if (!hasNpcImage) return;
+
+      const startPlatform = platforms[0];
+      const npcScale = 1.08;
+      const drawW = Math.round(npcSpriteBounds.w * npcScale);
+      const drawH = Math.round(npcSpriteBounds.h * npcScale);
+      const baseY = startPlatform ? platformSurfaceY(startPlatform) : stage.start.y + player.h;
+      const centerX = getStartNpcCenterX(drawW);
 
       const x = Math.round(centerX - drawW / 2);
       const y = Math.round(baseY - drawH - cameraY);
@@ -2089,6 +2144,11 @@ game_html = """
         return frames[Math.floor(frame / 7) % frames.length];
       }
 
+      if (player.crouching) {
+        const frames = spriteAnimations.crouch;
+        return frames[Math.floor(frame / 18) % frames.length];
+      }
+
       if (Math.abs(player.vx) > 0.35) {
         const frames = spriteAnimations.run;
         return frames[Math.floor(frame / 7) % frames.length];
@@ -2120,8 +2180,8 @@ game_html = """
         const sprite = selectSpriteFrame();
         const spriteBounds = getSpriteOpaqueBounds(sprite);
         const characterScale = 0.7;
-        const drawW = Math.round((player.onRope ? 90 : 98) * characterScale);
-        const drawH = Math.round((player.onRope ? 116 : 124) * characterScale);
+        const drawW = Math.round((player.crouching ? 112 : player.onRope ? 90 : 98) * characterScale);
+        const drawH = Math.round((player.crouching ? 86 : player.onRope ? 116 : 124) * characterScale);
         const footY = ((spriteBounds.y + spriteBounds.h) / sprite.sh) * drawH;
         const drawX = Math.round(screenX - drawW / 2);
         const drawY = Math.round(screenY - footY);
@@ -2190,7 +2250,7 @@ game_html = """
 
       ctx.fillStyle = "rgba(0,0,0,0.28)";
       ctx.beginPath();
-      ctx.ellipse(0, 5, 24, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 5, player.crouching ? 30 : 24, player.crouching ? 6 : 7, 0, 0, Math.PI * 2);
       ctx.fill();
 
       if (hasCharacterSprite) {
@@ -2226,6 +2286,32 @@ game_html = """
       const outfit = "#6fb8e8";
       const outfitDark = "#2b6f9b";
       const shoe = "#e5a13a";
+
+      if (player.crouching) {
+        ctx.translate(0, -4);
+        drawLimb(-18, -18, -34, -8, 6, skin);
+        drawLimb(18, -18, 34, -8, 6, skin);
+        ctx.fillStyle = shoe;
+        ctx.fillRect(-42, -7, 16, 6);
+        ctx.fillRect(26, -7, 16, 6);
+        ctx.fillStyle = outfitDark;
+        ctx.fillRect(-24, -34, 48, 24);
+        ctx.fillStyle = outfit;
+        ctx.fillRect(-20, -38, 40, 18);
+        ctx.fillStyle = skin;
+        ctx.beginPath();
+        ctx.ellipse(0, -52, 22, 19, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = skinDark;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = hair;
+        ctx.beginPath();
+        ctx.ellipse(-2, -64, 21, 11, -0.15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
 
       const armSwing = player.onRope ? climb * 8 : walk * 10;
       const legSwing = airborne ? 0.5 : walk;
@@ -2290,27 +2376,267 @@ game_html = """
     }
 
     function drawMiniMap(cameraY) {
-      if (hasSuppliedBackground) return;
+      const x = 8;
+      const y = 8;
+      const w = 238;
+      const h = 284;
+      const headerH = 76;
 
-      ctx.fillStyle = "rgba(255,255,255,0.82)";
-      ctx.fillRect(12, 12, 145, 98);
-      ctx.strokeStyle = "#111";
-      ctx.strokeRect(12, 12, 145, 98);
-      ctx.fillStyle = "#111";
-      ctx.font = "13px monospace";
-      ctx.fillText("mini maf", 20, 29);
-      ctx.fillText("인내? 숲", 20, 47);
-      for (const p of platforms) {
-        ctx.fillStyle = "#6d421b";
-        ctx.fillRect(
-          22 + p.x * 0.12,
-          104 - (p.y / world.height) * 88,
-          Math.max(4, p.w * 0.12),
-          2
-        );
+      ctx.save();
+      ctx.globalAlpha = 0.78;
+      const header = ctx.createLinearGradient(x, y, x, y + headerH);
+      header.addColorStop(0, "rgba(235, 238, 224, 0.5)");
+      header.addColorStop(0.25, "rgba(108, 112, 116, 0.52)");
+      header.addColorStop(0.58, "rgba(31, 34, 38, 0.62)");
+      header.addColorStop(1, "rgba(16, 18, 20, 0.7)");
+      ctx.fillStyle = header;
+      ctx.fillRect(x, y, w, headerH);
+
+      const mapBg = ctx.createLinearGradient(x, y + headerH, x, y + h);
+      mapBg.addColorStop(0, "rgba(211, 224, 218, 0.58)");
+      mapBg.addColorStop(0.48, "rgba(181, 192, 180, 0.6)");
+      mapBg.addColorStop(1, "rgba(236, 238, 229, 0.64)");
+      ctx.fillStyle = mapBg;
+      ctx.fillRect(x, y + headerH, w, h - headerH);
+
+      ctx.globalAlpha = 0.82;
+      ctx.fillStyle = "rgba(255,255,255,0.18)";
+      ctx.fillRect(x, y, w, 3);
+      ctx.strokeStyle = "rgba(242, 245, 238, 0.66)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+      ctx.strokeStyle = "rgba(39, 50, 57, 0.72)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 4, y + 4, w - 8, h - 8);
+      ctx.strokeStyle = "rgba(8, 14, 18, 0.5)";
+      ctx.beginPath();
+      ctx.moveTo(x + 4, y + headerH);
+      ctx.lineTo(x + w - 4, y + headerH);
+      ctx.stroke();
+
+      ctx.globalAlpha = 0.9;
+      const iconX = x + 9;
+      const iconY = y + 16;
+      const iconSize = 42;
+      ctx.fillStyle = "rgba(245, 248, 242, 0.68)";
+      ctx.fillRect(iconX, iconY, iconSize, iconSize);
+      ctx.strokeStyle = "#d7e2d6";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(iconX, iconY, iconSize, iconSize);
+      if (hasElliniaEmblem) {
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(elliniaEmblemImage, iconX + 4, iconY + 4, iconSize - 8, iconSize - 8);
+      } else {
+        const iconGrad = ctx.createLinearGradient(iconX, iconY, iconX + iconSize, iconY + iconSize);
+        iconGrad.addColorStop(0, "#5fd7ff");
+        iconGrad.addColorStop(0.45, "#f4e063");
+        iconGrad.addColorStop(1, "#c14b43");
+        ctx.fillStyle = iconGrad;
+        ctx.beginPath();
+        ctx.moveTo(iconX + 21, iconY + 5);
+        ctx.bezierCurveTo(iconX + 36, iconY + 11, iconX + 35, iconY + 34, iconX + 21, iconY + 38);
+        ctx.bezierCurveTo(iconX + 7, iconY + 34, iconX + 6, iconY + 11, iconX + 21, iconY + 5);
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
       }
-      ctx.fillStyle = "#e33232";
-      ctx.fillRect(22 + player.x * 0.12, 104 - (player.y / world.height) * 88, 5, 5);
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#f7f7f2";
+      ctx.strokeStyle = "rgba(0,0,0,0.72)";
+      ctx.lineWidth = 3;
+      ctx.font = "bold 17px Arial";
+      const stageTitle = stage.hidden ? "극한의 숲" : `인내의 숲 ${currentStage + 1}`;
+      const stageSubTitle = stage.hidden ? "숨겨진 길" : stage.name.replace(/^인내의 숲 /, "");
+      ctx.strokeText(stageTitle, x + 62, y + 31);
+      ctx.fillText(stageTitle, x + 62, y + 31);
+      ctx.font = "bold 14px Arial";
+      ctx.strokeText(stageSubTitle, x + 62, y + 54);
+      ctx.fillText(stageSubTitle, x + 62, y + 54);
+
+      ctx.fillStyle = "rgba(48, 35, 24, 0.5)";
+      ctx.fillRect(x + 8, y + headerH + 8, w - 16, 24);
+      ctx.fillStyle = "#d6d2ca";
+      ctx.font = "bold 13px Arial";
+      ctx.fillText(stage.hidden ? "Hidden Challenge" : "Forest Route", x + 44, y + headerH + 25);
+
+      const mapX = x + 14;
+      const mapY = y + headerH + 42;
+      const mapW = w - 28;
+      const mapH = h - headerH - 70;
+
+      ctx.save();
+      ctx.globalAlpha = 0.86;
+      ctx.beginPath();
+      ctx.rect(mapX, mapY, mapW, mapH);
+      ctx.clip();
+
+      ctx.fillStyle = "rgba(95, 108, 105, 0.26)";
+      for (let i = 0; i < 18; i++) {
+        const stoneX = mapX + 8 + (i * 43) % mapW;
+        const stoneY = mapY + 4 + (i * 17) % mapH;
+        ctx.beginPath();
+        ctx.ellipse(stoneX, stoneY, 14 + (i % 3) * 4, 7 + (i % 2) * 2, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.strokeStyle = "rgba(89, 102, 103, 0.64)";
+      ctx.lineWidth = 1;
+      for (let gx = mapX; gx <= mapX + mapW; gx += 24) {
+        ctx.beginPath();
+        ctx.moveTo(gx, mapY);
+        ctx.lineTo(gx, mapY + mapH);
+        ctx.stroke();
+      }
+      for (let gy = mapY; gy <= mapY + mapH; gy += 18) {
+        ctx.beginPath();
+        ctx.moveTo(mapX, gy);
+        ctx.lineTo(mapX + mapW, gy);
+        ctx.stroke();
+      }
+
+      let boundsMinX = 0;
+      let boundsMaxX = world.width;
+      let boundsMinY = stage.goal.y;
+      let boundsMaxY = world.height;
+
+      for (const p of platforms) {
+        boundsMinX = Math.min(boundsMinX, p.x);
+        boundsMaxX = Math.max(boundsMaxX, p.x + p.w);
+        boundsMinY = Math.min(boundsMinY, p.y - 60);
+        boundsMaxY = Math.max(boundsMaxY, p.y + 60);
+      }
+      for (const h of hazards) {
+        boundsMinX = Math.min(boundsMinX, h.min ?? h.x - h.r);
+        boundsMaxX = Math.max(boundsMaxX, h.max ?? h.x + h.r);
+        boundsMinY = Math.min(boundsMinY, h.minY ?? h.y - h.r);
+        boundsMaxY = Math.max(boundsMaxY, h.maxY ?? h.y + h.r);
+      }
+
+      boundsMinX = Math.max(0, boundsMinX - 24);
+      boundsMaxX = Math.min(world.width, boundsMaxX + 24);
+      boundsMinY = Math.max(0, boundsMinY - 34);
+      boundsMaxY = Math.min(world.height, boundsMaxY + 34);
+
+      const boundsW = Math.max(1, boundsMaxX - boundsMinX);
+      const boundsH = Math.max(1, boundsMaxY - boundsMinY);
+      const mapScale = Math.min(mapW / boundsW, mapH / boundsH);
+      const contentW = boundsW * mapScale;
+      const contentH = boundsH * mapScale;
+      const contentX = mapX + (mapW - contentW) / 2;
+      const contentY = mapY + (mapH - contentH) / 2;
+
+      ctx.strokeStyle = "rgba(37, 47, 48, 0.72)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(contentX, contentY, contentW, contentH);
+
+      function miniX(worldX) {
+        return contentX + (worldX - boundsMinX) * mapScale;
+      }
+
+      function miniY(worldY) {
+        return contentY + (worldY - boundsMinY) * mapScale;
+      }
+
+      const viewTop = cameraY;
+      const viewBottom = cameraY + canvas.height;
+      const viewY = miniY(viewTop);
+      const viewH = Math.max(4, miniY(viewBottom) - miniY(viewTop));
+      ctx.fillStyle = "rgba(88, 169, 255, 0.14)";
+      ctx.fillRect(mapX, viewY, mapW, viewH);
+      ctx.strokeStyle = "rgba(58, 142, 255, 0.58)";
+      ctx.strokeRect(mapX + 1, viewY, mapW - 2, viewH);
+
+      for (const p of platforms) {
+        const px = miniX(p.x);
+        const py = miniY(platformSurfaceY(p));
+        const pw = Math.max(4, p.w * mapScale);
+        ctx.fillStyle = "#6b3d17";
+        ctx.fillRect(px, py, pw, 3);
+        ctx.fillStyle = "#1bd958";
+        ctx.fillRect(px, py - 3, pw, 3);
+        ctx.fillStyle = "rgba(255, 240, 120, 0.88)";
+        ctx.fillRect(px + 1, py - 4, Math.min(4, pw), 1);
+      }
+
+      for (const spike of spikes) {
+        const sx = miniX(spike.x + spike.w / 2);
+        const sy = miniY(spike.y);
+        ctx.fillStyle = "#dc3030";
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - 8);
+        ctx.lineTo(sx - 5, sy + 2);
+        ctx.lineTo(sx + 5, sy + 2);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      for (const h of hazards) {
+        const hx = miniX(h.x);
+        const hy = miniY(h.y);
+        ctx.strokeStyle = "rgba(59, 128, 255, 0.55)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        if (h.min !== undefined && h.max !== undefined) {
+          ctx.moveTo(miniX(h.min), hy);
+          ctx.lineTo(miniX(h.max), hy);
+        } else if (h.minY !== undefined && h.maxY !== undefined) {
+          ctx.moveTo(hx, miniY(h.minY));
+          ctx.lineTo(hx, miniY(h.maxY));
+        }
+        ctx.stroke();
+        ctx.fillStyle = h.dy ? "#29c9ff" : "#ff46dc";
+        ctx.beginPath();
+        ctx.arc(hx, hy, Math.max(3, h.r * 0.32), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (const c of checkpoints) {
+        const cx = miniX(c.x + c.w / 2);
+        const cy = miniY(checkpointSurfaceY(c));
+        ctx.fillStyle = "#30e85a";
+        ctx.fillRect(cx - 2, cy - 10, 5, 11);
+        ctx.fillStyle = "#fff265";
+        ctx.fillRect(cx + 2, cy - 10, 8, 5);
+      }
+
+      const goalX = miniX(stage.goal.x + stage.goal.w / 2);
+      const goalY = miniY(stage.goal.y + stage.goal.h / 2);
+      ctx.fillStyle = "#24d7ff";
+      ctx.beginPath();
+      ctx.arc(goalX, goalY, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.stroke();
+
+      const playerDotX = miniX(player.x + player.w / 2);
+      const playerDotY = miniY(player.y + player.h / 2);
+      ctx.fillStyle = "#ff32e6";
+      ctx.fillRect(playerDotX - 3, playerDotY - 8, 6, 12);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(playerDotX - 1, playerDotY - 6, 2, 3);
+      ctx.restore();
+
+      ctx.globalAlpha = 0.72;
+      ctx.fillStyle = "rgba(241, 244, 237, 0.55)";
+      ctx.fillRect(x + 5, y + h - 24, w - 10, 19);
+      ctx.strokeStyle = "rgba(150, 158, 150, 0.62)";
+      ctx.lineWidth = 1;
+      for (let gx = x + 8; gx < x + w - 8; gx += 11) {
+        ctx.beginPath();
+        ctx.moveTo(gx, y + h - 24);
+        ctx.lineTo(gx, y + h - 6);
+        ctx.stroke();
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#273137";
+      ctx.font = "bold 11px Arial";
+      ctx.fillText("P", playerDotX + 5, playerDotY - 4);
+      ctx.fillStyle = "#0e8d25";
+      ctx.fillText("SAVE", x + w - 58, y + h - 10);
+      ctx.restore();
     }
 
     function getElapsedParts() {
@@ -2320,6 +2646,13 @@ game_html = """
         minutes: Math.floor(totalSeconds / 60),
         seconds: totalSeconds % 60,
       };
+    }
+
+    function formatElapsedMs(elapsedMs) {
+      const totalSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes}분 ${String(seconds).padStart(2, "0")}초`;
     }
 
     function drawMapleTimePanel() {
@@ -2374,6 +2707,129 @@ game_html = """
       ctx.fillText("초", x + 276, y + 42);
     }
 
+    function drawMapleWindow(x, y, w, h, title) {
+      ctx.save();
+      ctx.fillStyle = "rgba(0, 0, 0, 0.42)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const panel = ctx.createLinearGradient(x, y, x, y + h);
+      panel.addColorStop(0, "#6b4a19");
+      panel.addColorStop(0.22, "#3d280d");
+      panel.addColorStop(1, "#1c1207");
+      ctx.fillStyle = panel;
+      ctx.fillRect(x, y, w, h);
+
+      ctx.strokeStyle = "#f6d877";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+      ctx.strokeStyle = "#241404";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(x + 8, y + 8, w - 16, h - 16);
+
+      ctx.fillStyle = "rgba(16, 10, 4, 0.74)";
+      ctx.fillRect(x + 16, y + 44, w - 32, h - 104);
+      ctx.strokeStyle = "rgba(255, 226, 128, 0.3)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x + 16, y + 44, w - 32, h - 104);
+
+      ctx.fillStyle = "#fff2a8";
+      ctx.font = "bold 23px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(title, x + w / 2, y + 31);
+      ctx.textAlign = "left";
+      ctx.restore();
+    }
+
+    function drawResultButton(x, y, w, h, label) {
+      resultButtonRect = { x, y, w, h };
+      const button = ctx.createLinearGradient(x, y, x, y + h);
+      button.addColorStop(0, "#f8df82");
+      button.addColorStop(0.48, "#c4862a");
+      button.addColorStop(1, "#7a4817");
+      ctx.fillStyle = button;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeStyle = "#fff5b8";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+      ctx.strokeStyle = "#3b2108";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 4, y + 4, w - 8, h - 8);
+      ctx.fillStyle = "#211207";
+      ctx.font = "bold 18px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x + w / 2, y + 27);
+      ctx.textAlign = "left";
+    }
+
+    function drawStageResultWindow() {
+      const result = stageResults[currentStage] || {
+        deaths: player.deaths,
+        elapsedMs: stageFinishElapsedMs ?? 0,
+      };
+      const nextLabel = currentStage === visibleStageCount - 1 && hiddenUnlocked ? "히든" : "다음";
+      const x = 262;
+      const y = 142;
+      const w = 436;
+      const h = 258;
+      drawMapleWindow(x, y, w, h, "STAGE CLEAR");
+
+      ctx.fillStyle = "#f9edb2";
+      ctx.font = "bold 17px Arial";
+      ctx.fillText(`${currentStage + 1}단계 결과`, x + 44, y + 82);
+
+      ctx.fillStyle = "#fff8cc";
+      ctx.font = "bold 22px Arial";
+      ctx.fillText("죽은 횟수", x + 82, y + 138);
+      ctx.fillText(`${result.deaths}회`, x + 276, y + 138);
+      ctx.fillText("소요시간", x + 82, y + 184);
+      ctx.fillText(formatElapsedMs(result.elapsedMs), x + 276, y + 184);
+
+      if (nextLabel === "히든") {
+        ctx.fillStyle = "#ffdcff";
+        ctx.font = "bold 14px Arial";
+        ctx.fillText("3분 이내 클리어! 히든 스테이지가 열렸다.", x + 58, y + 196);
+      }
+
+      drawResultButton(x + 146, y + 210, 144, 42, nextLabel);
+    }
+
+    function drawFinalResultWindow() {
+      const x = 214;
+      const y = 58;
+      const w = 532;
+      const h = 462;
+      drawMapleWindow(x, y, w, h, "FINAL RESULT");
+
+      ctx.fillStyle = "#f9edb2";
+      ctx.font = "bold 15px Arial";
+      ctx.fillText("스테이지", x + 54, y + 78);
+      ctx.fillText("죽음", x + 258, y + 78);
+      ctx.fillText("소요시간", x + 352, y + 78);
+
+      const resultCount = stageResults[hiddenStageIndex] ? stages.length : visibleStageCount;
+      for (let i = 0; i < resultCount; i++) {
+        const rowY = y + 116 + i * 38;
+        const result = stageResults[i];
+        ctx.fillStyle = i % 2 === 0 ? "rgba(255, 238, 160, 0.08)" : "rgba(255, 238, 160, 0.16)";
+        ctx.fillRect(x + 38, rowY - 25, w - 76, 34);
+        ctx.fillStyle = "#fff8cc";
+        ctx.font = "bold 16px Arial";
+        ctx.fillText(`${i + 1}단계`, x + 58, rowY);
+        ctx.fillText(result ? `${result.deaths}회` : "--", x + 258, rowY);
+        ctx.fillText(result ? formatElapsedMs(result.elapsedMs) : "--", x + 352, rowY);
+      }
+
+      const visibleResults = stageResults.slice(0, resultCount);
+      const totalDeaths = visibleResults.reduce((sum, result) => sum + (result ? result.deaths : 0), 0);
+      const totalTime = visibleResults.reduce((sum, result) => sum + (result ? result.elapsedMs : 0), 0);
+      ctx.fillStyle = "#fff2a8";
+      ctx.font = "bold 18px Arial";
+      ctx.fillText(`총 죽음 ${totalDeaths}회`, x + 92, y + 374);
+      ctx.fillText(`총 시간 ${formatElapsedMs(totalTime)}`, x + 286, y + 374);
+
+      drawResultButton(x + 194, y + 396, 144, 42, "retry");
+    }
+
     function render() {
       const targetCameraY = Math.max(0, Math.min(world.height - canvas.height, player.y - 360));
       cameraY += (targetCameraY - cameraY) * 0.12;
@@ -2389,18 +2845,6 @@ game_html = """
       drawPlayer(cameraY);
       drawMiniMap(cameraY);
 
-      ctx.fillStyle = "#111";
-      ctx.fillStyle = "rgba(9, 24, 14, 0.62)";
-      ctx.fillRect(10, 10, 300, 44);
-      ctx.strokeStyle = "rgba(219, 255, 181, 0.28)";
-      ctx.strokeRect(10, 10, 300, 44);
-      ctx.fillStyle = "#edffdc";
-      ctx.font = "13px Arial";
-      ctx.fillText(`${currentStage + 1}/${stages.length} ${stage.name}`, 18, 28);
-      ctx.fillStyle = "#ccefb8";
-      ctx.font = "13px Arial";
-      ctx.fillText("Forest of Patience", 18, 47);
-
       ctx.fillStyle = "rgba(9, 24, 14, 0.62)";
       ctx.fillRect(805, 12, 138, 46);
       ctx.strokeStyle = "rgba(219, 255, 181, 0.28)";
@@ -2414,16 +2858,12 @@ game_html = """
       drawMapleTimePanel();
 
       if (player.won) {
-        ctx.fillStyle = "rgba(255,255,255,0.85)";
-        ctx.fillRect(220, 210, 520, 130);
-        ctx.strokeStyle = "#111";
-        ctx.lineWidth = 4;
-        ctx.strokeRect(220, 210, 520, 130);
-        ctx.fillStyle = "#111";
-        ctx.font = "24px Comic Sans MS";
-        ctx.fillText("도착! 다음 숲으로 넘어감", 300, 270);
-        ctx.font = "15px monospace";
-        ctx.fillText("잠깐 뒤 자동으로 다음 스테이지", 340, 302);
+        const hiddenReady = currentStage === visibleStageCount - 1 && hiddenUnlocked && !stageResults[hiddenStageIndex];
+        if (currentStage === hiddenStageIndex || (currentStage === visibleStageCount - 1 && !hiddenReady)) {
+          drawFinalResultWindow();
+        } else {
+          drawStageResultWindow();
+        }
       }
     }
 
@@ -2434,29 +2874,56 @@ game_html = """
     }
 
     window.addEventListener("keydown", (event) => {
-      if (["ArrowLeft", "ArrowRight", "ArrowUp", " ", "a", "d", "w"].includes(event.key)) {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " ", "a", "d", "w", "s"].includes(event.key)) {
         event.preventDefault();
+      }
+      if (event.key.toLowerCase() === "h") {
+        hiddenUnlocked = true;
+        loadStage(hiddenStageIndex, true);
+        statusText.textContent = "테스트키: 히든 스테이지 진입";
+        return;
       }
       keys.add(event.key);
     });
 
     window.addEventListener("keyup", (event) => keys.delete(event.key));
 
+    canvas.addEventListener("click", (event) => {
+      if (!player.won || !resultButtonRect) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (event.clientX - rect.left) * scaleX;
+      const y = (event.clientY - rect.top) * scaleY;
+      const hit =
+        x >= resultButtonRect.x &&
+        x <= resultButtonRect.x + resultButtonRect.w &&
+        y >= resultButtonRect.y &&
+        y <= resultButtonRect.y + resultButtonRect.h;
+
+      if (!hit) return;
+
+      const hiddenReady = currentStage === visibleStageCount - 1 && hiddenUnlocked && !stageResults[hiddenStageIndex];
+      if (hiddenReady) {
+        loadStage(hiddenStageIndex, true);
+      } else if (currentStage === hiddenStageIndex || currentStage === visibleStageCount - 1) {
+        stageResults = Array(stages.length).fill(null);
+        hiddenUnlocked = false;
+        loadStage(0);
+        statusText.textContent = "처음부터 다시 도전";
+      } else {
+        loadStage(currentStage + 1);
+      }
+    });
+
     restartButton.addEventListener("click", () => {
       loadStage(currentStage);
       statusText.textContent = `${stage.name} 다시 시작`;
     });
 
-    prevStageButton.addEventListener("click", () => loadStage(currentStage - 1));
-    nextStageButton.addEventListener("click", () => loadStage(currentStage + 1));
-    demoRunButton.addEventListener("click", () => {
-      demoMode = true;
-      demoIndex = 0;
-      demoRoute = makeDemoRoute();
-      player.deaths = 0;
-      player.won = false;
-      statusText.textContent = `${stage.name} 자동 시연 중`;
-    });
+    prevStageButton.addEventListener("click", () => loadVisibleStage(currentStage - 1));
+    nextStageButton.addEventListener("click", () => loadVisibleStage(currentStage + 1));
 
     loadStage(0);
     loop();
@@ -2476,6 +2943,9 @@ components.html(
     ).replace(
         "__NPC_DATA_URL__",
         npc_data_url,
+    ).replace(
+        "__ELLINIA_EMBLEM_DATA_URL__",
+        ellinia_emblem_data_url,
     ),
     height=620,
     scrolling=False,
