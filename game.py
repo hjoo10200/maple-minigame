@@ -839,6 +839,8 @@ game_html = """
     let demoIndex = 0;
     let demoRoute = [];
     let cameraY = 0;
+    let stageStartedAt = performance.now();
+    let stageFinishElapsedMs = null;
     let npcBubbleText = "";
     let npcBubbleMessageIndex = -1;
     let npcBubbleStartFrame = -9999;
@@ -882,6 +884,8 @@ game_html = """
       ropes = stage.ropes || [];
       spikes = prepareSpikes(stage, platforms);
       clearTimer = 0;
+      stageStartedAt = performance.now();
+      stageFinishElapsedMs = null;
       demoMode = false;
       demoIndex = 0;
       demoRoute = [];
@@ -1180,6 +1184,7 @@ game_html = """
       if (rectsOverlap(player, stage.goal)) {
         player.won = true;
         clearTimer = 0;
+        stageFinishElapsedMs = performance.now() - stageStartedAt;
         statusText.textContent = `${stage.name} 성공. 사망 ${player.deaths}번.`;
       }
     }
@@ -2252,6 +2257,67 @@ game_html = """
       ctx.fillRect(22 + player.x * 0.12, 104 - (player.y / world.height) * 88, 5, 5);
     }
 
+    function getElapsedParts() {
+      const elapsedMs = stageFinishElapsedMs ?? (performance.now() - stageStartedAt);
+      const totalSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
+      return {
+        minutes: Math.floor(totalSeconds / 60),
+        seconds: totalSeconds % 60,
+      };
+    }
+
+    function drawMapleTimePanel() {
+      const { minutes, seconds } = getElapsedParts();
+      const x = Math.round(canvas.width / 2 - 154);
+      const y = 10;
+      const w = 308;
+      const h = 54;
+
+      const panel = ctx.createLinearGradient(x, y, x, y + h);
+      panel.addColorStop(0, "rgba(84, 63, 20, 0.94)");
+      panel.addColorStop(0.48, "rgba(48, 32, 10, 0.96)");
+      panel.addColorStop(1, "rgba(31, 20, 7, 0.98)");
+      ctx.fillStyle = panel;
+      ctx.fillRect(x, y, w, h);
+
+      ctx.strokeStyle = "#f3d36b";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+      ctx.strokeStyle = "rgba(30, 17, 4, 0.9)";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(x + 4, y + 4, w - 8, h - 8);
+
+      ctx.fillStyle = "#e7d989";
+      ctx.font = "bold 13px Arial";
+      ctx.fillText("소요시간", x + 26, y + 22);
+      ctx.beginPath();
+      ctx.fillStyle = "#f6dc62";
+      ctx.arc(x + 14, y + 17, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#3a2608";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      drawBadLine(x + 14, y + 17, x + 14, y + 13, "#3a2608", 1.5);
+      drawBadLine(x + 14, y + 17, x + 18, y + 17, "#3a2608", 1.5);
+
+      const minuteText = String(minutes).padStart(2, "0");
+      const secondText = String(seconds).padStart(2, "0");
+      ctx.textAlign = "right";
+      ctx.shadowColor = "rgba(255, 246, 174, 0.7)";
+      ctx.shadowBlur = 7;
+      ctx.fillStyle = "#fff7b8";
+      ctx.font = "bold 38px Consolas, 'Courier New', monospace";
+      ctx.fillText(minuteText, x + 164, y + 44);
+      ctx.fillText(secondText, x + 268, y + 44);
+      ctx.shadowBlur = 0;
+
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#fff0a0";
+      ctx.font = "bold 15px Arial";
+      ctx.fillText("분", x + 172, y + 42);
+      ctx.fillText("초", x + 276, y + 42);
+    }
+
     function render() {
       const targetCameraY = Math.max(0, Math.min(world.height - canvas.height, player.y - 360));
       cameraY += (targetCameraY - cameraY) * 0.12;
@@ -2269,11 +2335,11 @@ game_html = """
 
       ctx.fillStyle = "#111";
       ctx.fillStyle = "rgba(9, 24, 14, 0.62)";
-      ctx.fillRect(10, 10, 420, 44);
+      ctx.fillRect(10, 10, 300, 44);
       ctx.strokeStyle = "rgba(219, 255, 181, 0.28)";
-      ctx.strokeRect(10, 10, 420, 44);
+      ctx.strokeRect(10, 10, 300, 44);
       ctx.fillStyle = "#edffdc";
-      ctx.font = "15px Arial";
+      ctx.font = "13px Arial";
       ctx.fillText(`${currentStage + 1}/${stages.length} ${stage.name}`, 18, 28);
       ctx.fillStyle = "#ccefb8";
       ctx.font = "13px Arial";
@@ -2289,6 +2355,7 @@ game_html = """
       ctx.fillStyle = "#ccefb8";
       ctx.font = "13px Arial";
       ctx.fillText(`height: ${Math.max(0, Math.round(world.height - player.y))}`, 815, 48);
+      drawMapleTimePanel();
 
       if (player.won) {
         ctx.fillStyle = "rgba(255,255,255,0.85)";
