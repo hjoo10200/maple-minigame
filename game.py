@@ -497,8 +497,9 @@ game_html = """
         start: { x: 78, y: 1546 },
         goal: { x: 720, y: 54, w: 160, h: 90 },
         checkpoints: [
-          { x: 650, y: 1016, w: 22, h: 45 },
-          { x: 332, y: 312, w: 22, h: 45 },
+          { x: 590, y: 1016, w: 22, h: 45 },
+          { x: 116, y: 698, w: 22, h: 45 },
+          { x: 520, y: 390, w: 22, h: 45 },
         ],
         ropes: [],
         spikes: [],
@@ -525,9 +526,8 @@ game_html = """
           { x: 752, y: 146, w: 140, h: 14 },
         ],
         hazards: [
-          { x: 525, y: 1288, r: 13, dx: 1.8, min: 230, max: 760, type: "star" },
-          { x: 410, y: 878, r: 13, dx: -2.0, min: 82, max: 620, type: "star" },
-          { x: 672, y: 246, r: 14, dx: 1.6, min: 560, max: 900, type: "star" },
+          { x: 492, y: 1288, r: 11, dx: 1.25, min: 360, max: 700, type: "star" },
+          { x: 650, y: 246, r: 11, dx: -1.15, min: 548, max: 840, type: "star" },
         ],
       },
       {
@@ -537,15 +537,14 @@ game_html = """
         start: { x: 812, y: 1670 },
         goal: { x: 54, y: 55, w: 160, h: 90 },
         checkpoints: [
-          { x: 790, y: 1276, w: 22, h: 45 },
-          { x: 310, y: 518, w: 22, h: 45 },
+          { x: 744, y: 1276, w: 22, h: 45 },
+          { x: 274, y: 518, w: 22, h: 45 },
         ],
         ropes: [],
         spikes: [
-          { platform: 2, dir: "up", align: 0.48, span: 78, length: 48, phase: 0, period: 130 },
-          { platform: 4, dir: "up", align: 0.55, span: 72, length: 46, phase: 45, period: 135 },
-          { platform: 8, dir: "up", align: 0.48, span: 58, length: 48, phase: 20, period: 120 },
-          { platform: 11, dir: "up", align: 0.52, span: 72, length: 48, phase: 70, period: 125 },
+          { platform: 4, dir: "up", align: 0.55, span: 64, length: 42, phase: 30, period: 165 },
+          { platform: 8, dir: "up", align: 0.48, span: 54, length: 44, phase: 70, period: 160 },
+          { platform: 12, dir: "up", align: 0.52, span: 58, length: 44, phase: 110, period: 155 },
         ],
         platforms: [
           { x: 748, y: 1720, w: 172, h: 15 },
@@ -568,10 +567,10 @@ game_html = """
           { x: 52, y: 148, w: 150, h: 14 },
         ],
         hazards: [
-          { x: 738, y: 1568, r: 15, dx: -2.2, min: 330, max: 880, type: "star" },
-          { x: 154, y: 928, r: 15, dx: 2.1, min: 38, max: 610, type: "star" },
-          { x: 795, y: 686, r: 15, dx: -2.0, min: 450, max: 890, type: "star" },
-          { x: 550, y: 214, r: 14, dx: 1.9, min: 252, max: 900, type: "star" },
+          { x: 720, y: 1568, r: 12, dx: -1.55, min: 420, max: 860, type: "star" },
+          { x: 166, y: 928, r: 12, dx: 1.45, min: 42, max: 510, type: "star" },
+          { x: 778, y: 686, r: 12, dx: -1.5, min: 510, max: 884, type: "star" },
+          { x: 520, y: 214, r: 11, dx: 1.35, min: 260, max: 780, type: "star" },
         ],
       },
       {
@@ -587,9 +586,10 @@ game_html = """
         ],
         ropes: [],
         spikes: [
-          { platform: 2, dir: "up", align: 0.44, span: 62, length: 50, phase: 0, period: 170 },
-          { platform: 7, dir: "up", align: 0.58, span: 58, length: 48, phase: 55, period: 180 },
-          { platform: 13, dir: "up", align: 0.5, span: 54, length: 50, phase: 20, period: 170 },
+          { platform: 2, dir: "up", align: 0.44, span: 58, length: 46, phase: 0, period: 150 },
+          { platform: 6, dir: "up", align: 0.52, span: 54, length: 48, phase: 55, period: 148 },
+          { platform: 10, dir: "up", align: 0.46, span: 52, length: 48, phase: 102, period: 146 },
+          { platform: 13, dir: "up", align: 0.5, span: 50, length: 48, phase: 20, period: 142 },
         ],
         platforms: [
           { x: 38, y: 1660, w: 170, h: 15 },
@@ -612,11 +612,12 @@ game_html = """
           { x: 710, y: 160, w: 178, h: 14 },
         ],
         hazards: [
-          { x: 330, y: 1490, r: 13, dx: 1.7, min: 250, max: 760, type: "star" },
-          { x: 188, y: 1036, r: 13, dx: 1.9, min: 72, max: 472, type: "star" },
-          { x: 650, y: 860, r: 14, dx: -1.7, min: 320, max: 860, type: "star" },
-          { x: 452, y: 580, r: 13, dx: -1.8, min: 128, max: 720, type: "star" },
-          { x: 610, y: 318, r: 13, dx: 1.6, min: 300, max: 850, type: "star" },
+          { x: 330, y: 1490, r: 12, dx: 1.75, min: 242, max: 760, type: "star" },
+          { x: 188, y: 1036, r: 12, dx: 1.9, min: 72, max: 472, type: "star" },
+          { x: 650, y: 860, r: 13, dx: -1.85, min: 320, max: 860, type: "star" },
+          { x: 452, y: 580, r: 12, dx: -1.95, min: 128, max: 720, type: "star" },
+          { x: 610, y: 318, r: 12, dx: 1.7, min: 300, max: 850, type: "star" },
+          { x: 780, y: 246, r: 11, dx: -1.45, min: 610, max: 900, type: "star" },
         ],
       },
       {
@@ -626,14 +627,16 @@ game_html = """
         start: { x: 820, y: 1588 },
         goal: { x: 68, y: 58, w: 160, h: 90 },
         checkpoints: [
-          { x: 700, y: 1264, w: 22, h: 45 },
-          { x: 400, y: 496, w: 22, h: 45 },
+          { x: 650, y: 1264, w: 22, h: 45 },
+          { x: 594, y: 582, w: 22, h: 45 },
         ],
         ropes: [],
         spikes: [
-          { platform: 4, dir: "up", align: 0.5, span: 56, length: 50, phase: 30, period: 125 },
-          { platform: 7, dir: "up", align: 0.5, span: 58, length: 48, phase: 68, period: 120 },
-          { platform: 12, dir: "up", align: 0.5, span: 56, length: 50, phase: 12, period: 115 },
+          { platform: 3, dir: "up", align: 0.45, span: 52, length: 50, phase: 20, period: 128 },
+          { platform: 5, dir: "up", align: 0.55, span: 54, length: 50, phase: 68, period: 124 },
+          { platform: 8, dir: "up", align: 0.5, span: 52, length: 52, phase: 104, period: 120 },
+          { platform: 11, dir: "up", align: 0.5, span: 50, length: 52, phase: 12, period: 118 },
+          { platform: 14, dir: "up", align: 0.48, span: 48, length: 50, phase: 82, period: 116 },
         ],
         platforms: [
           { x: 748, y: 1640, w: 170, h: 15 },
@@ -655,12 +658,14 @@ game_html = """
           { x: 52, y: 150, w: 180, h: 14 },
         ],
         hazards: [
-          { x: 602, y: 1470, r: 15, dx: -2.4, min: 320, max: 880, type: "star" },
-          { x: 140, y: 1220, r: 15, dx: 2.3, min: 70, max: 420, type: "star" },
-          { x: 560, y: 864, r: 15, dx: -2.2, min: 216, max: 880, type: "star" },
-          { x: 318, y: 706, r: 14, dx: 2.15, min: 76, max: 780, type: "star" },
-          { x: 756, y: 418, r: 14, dx: -2.0, min: 520, max: 900, type: "star" },
-          { x: 310, y: 214, r: 14, dx: 2.2, min: 52, max: 660, type: "star" },
+          { x: 602, y: 1470, r: 13, dx: -2.15, min: 320, max: 880, type: "star" },
+          { x: 140, y: 1220, r: 13, dx: 2.05, min: 70, max: 420, type: "star" },
+          { x: 560, y: 864, r: 13, dx: -2.0, min: 216, max: 880, type: "star" },
+          { x: 318, y: 706, r: 12, dx: 2.0, min: 76, max: 780, type: "star" },
+          { x: 756, y: 418, r: 12, dx: -1.9, min: 520, max: 900, type: "star" },
+          { x: 310, y: 214, r: 12, dx: 2.0, min: 52, max: 660, type: "star" },
+          { x: 470, y: 1110, r: 11, dy: 1.55, minY: 990, maxY: 1228, type: "star" },
+          { x: 690, y: 640, r: 11, dy: -1.65, minY: 526, maxY: 760, type: "star" },
         ],
       },
       {
@@ -671,17 +676,19 @@ game_html = """
         start: { x: 70, y: 1798 },
         goal: { x: 680, y: 58, w: 190, h: 100 },
         checkpoints: [
-          { x: 510, y: 1248, w: 22, h: 45 },
-          { x: 382, y: 636, w: 22, h: 45 },
+          { x: 340, y: 1248, w: 22, h: 45 },
+          { x: 546, y: 516, w: 22, h: 45 },
         ],
         ropes: [],
         spikes: [
-          { platform: 3, dir: "up", align: 0.48, span: 56, length: 42, phase: 0, period: 185 },
-          { platform: 6, dir: "up", align: 0.56, span: 52, length: 44, phase: 62, period: 178 },
-          { platform: 9, dir: "up", align: 0.46, span: 48, length: 44, phase: 118, period: 176 },
-          { platform: 12, dir: "up", align: 0.54, span: 44, length: 42, phase: 36, period: 168 },
-          { platform: 15, dir: "up", align: 0.5, span: 42, length: 42, phase: 92, period: 170 },
-          { platform: 18, dir: "up", align: 0.52, span: 38, length: 40, phase: 145, period: 182 },
+          { platform: 2, dir: "up", align: 0.5, span: 56, length: 48, phase: 0, period: 132 },
+          { platform: 4, dir: "up", align: 0.56, span: 54, length: 50, phase: 46, period: 126 },
+          { platform: 6, dir: "up", align: 0.44, span: 50, length: 50, phase: 88, period: 124 },
+          { platform: 8, dir: "up", align: 0.54, span: 48, length: 52, phase: 118, period: 120 },
+          { platform: 10, dir: "up", align: 0.48, span: 46, length: 52, phase: 30, period: 118 },
+          { platform: 13, dir: "up", align: 0.5, span: 42, length: 50, phase: 92, period: 116 },
+          { platform: 16, dir: "up", align: 0.5, span: 38, length: 48, phase: 145, period: 114 },
+          { platform: 19, dir: "up", align: 0.52, span: 34, length: 46, phase: 64, period: 112 },
         ],
         platforms: [
           { x: 42, y: 1848, w: 190, h: 15 },
@@ -708,12 +715,16 @@ game_html = """
           { x: 715, y: 160, w: 150, h: 14 },
         ],
         hazards: [
-          { x: 604, y: 1638, r: 11, dx: -1.65, min: 328, max: 870, type: "star" },
-          { x: 174, y: 1304, r: 11, dx: 1.72, min: 58, max: 548, type: "star" },
-          { x: 764, y: 1054, r: 11, dx: -1.82, min: 432, max: 884, type: "star" },
-          { x: 306, y: 808, r: 10, dx: 1.76, min: 70, max: 612, type: "star" },
-          { x: 634, y: 562, r: 10, dx: -1.65, min: 382, max: 858, type: "star" },
-          { x: 416, y: 326, r: 10, dx: 1.52, min: 96, max: 706, type: "star" },
+          { x: 604, y: 1638, r: 11, dx: -2.25, min: 328, max: 870, type: "star" },
+          { x: 174, y: 1304, r: 11, dx: 2.12, min: 58, max: 548, type: "star" },
+          { x: 764, y: 1054, r: 11, dx: -2.18, min: 432, max: 884, type: "star" },
+          { x: 306, y: 808, r: 10, dx: 2.08, min: 70, max: 612, type: "star" },
+          { x: 634, y: 562, r: 10, dx: -2.0, min: 382, max: 858, type: "star" },
+          { x: 416, y: 326, r: 10, dx: 1.92, min: 96, max: 706, type: "star" },
+          { x: 462, y: 1510, r: 10, dy: 1.7, minY: 1376, maxY: 1660, type: "star" },
+          { x: 720, y: 960, r: 10, dy: -1.82, minY: 804, maxY: 1118, type: "star" },
+          { x: 214, y: 662, r: 10, dy: 1.74, minY: 520, maxY: 844, type: "star" },
+          { x: 508, y: 238, r: 9, dy: -1.55, minY: 156, maxY: 360, type: "star" },
         ],
       },
     ];
@@ -727,11 +738,11 @@ game_html = """
     ];
 
     const platformGuardRules = [
-      { step: 6, max: 1, targetTotal: 3, r: 10, speed: 1.15, range: 78, yOffset: 58 },
-      { step: 5, max: 1, targetTotal: 4, r: 10, speed: 1.3, range: 88, yOffset: 57 },
-      { step: 4, max: 2, targetTotal: 5, r: 10, speed: 1.45, range: 98, yOffset: 56 },
-      { step: 3, max: 1, targetTotal: 7, r: 11, speed: 1.6, range: 108, yOffset: 55 },
-      { step: 9, max: 0, targetTotal: 6, r: 0, speed: 0, range: 0, yOffset: 0 },
+      { step: 9, max: 0, targetTotal: 2, r: 9, speed: 1.0, range: 64, yOffset: 58 },
+      { step: 5, max: 1, targetTotal: 4, r: 10, speed: 1.25, range: 82, yOffset: 57 },
+      { step: 4, max: 1, targetTotal: 6, r: 10, speed: 1.45, range: 94, yOffset: 56 },
+      { step: 3, max: 2, targetTotal: 9, r: 11, speed: 1.62, range: 108, yOffset: 55 },
+      { step: 3, max: 2, targetTotal: 11, r: 10, speed: 1.82, range: 118, yOffset: 54 },
     ];
 
     const platformGrassBottomOffset = -3;
@@ -1138,8 +1149,10 @@ game_html = """
       }
 
       for (const h of hazards) {
-        h.x += h.dx;
-        if (h.x < h.min || h.x > h.max) h.dx *= -1;
+        h.x += h.dx || 0;
+        h.y += h.dy || 0;
+        if (h.min !== undefined && h.max !== undefined && (h.x < h.min || h.x > h.max)) h.dx *= -1;
+        if (h.minY !== undefined && h.maxY !== undefined && (h.y < h.minY || h.y > h.maxY)) h.dy *= -1;
         const badBox = h.type === "necki"
           ? { x: h.x - h.w / 2, y: h.y - h.h / 2, w: h.w, h: h.h }
           : { x: h.x - h.r, y: h.y - h.r, w: h.r * 2, h: h.r * 2 };
